@@ -1,1 +1,1 @@
-Finish current exercise and submit
+Finish current exercise and submit!
