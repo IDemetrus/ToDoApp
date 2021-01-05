@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TaskFragment : Fragment() {
 
@@ -33,7 +35,7 @@ class TaskFragment : Fragment() {
         titleField = view.findViewById(R.id.task_title) as EditText
         dateButton = view.findViewById(R.id.task_date) as Button
         dateButton.apply {
-            text = task.date.toString()
+            text = getDate(task.date)
             isEnabled = false
         }
         solvedCheckBox = view.findViewById(R.id.task_solved) as CheckBox
@@ -41,6 +43,11 @@ class TaskFragment : Fragment() {
 
 
         return view
+    }
+
+    private fun getDate(date: Date): String {
+        val sdf = SimpleDateFormat("EEE, MMM d, yyyy", Locale.ENGLISH)
+        return sdf.format(date)
     }
 
     override fun onStart() {
