@@ -61,8 +61,6 @@ class TaskListFragment : Fragment() {
         private lateinit var task: Task
         private val tvTitle: TextView? = itemView.findViewById(R.id.list_item_title)
         private val tvDate: TextView? = itemView.findViewById(R.id.list_item_date)
-        private val tvAdvTitle: TextView? = itemView.findViewById(R.id.list_item_adv_title)
-        private val tvAdvDate: TextView? = itemView.findViewById(R.id.list_item_adv_date)
         private val ivSolved: ImageView? = itemView.findViewById(R.id.list_item_solved)
 
 
@@ -75,8 +73,6 @@ class TaskListFragment : Fragment() {
             tvTitle?.text = this.task.title
             tvDate?.text = getDate(this.task.date)
             ivSolved?.visibility = if (task.isSolved) View.VISIBLE else View.GONE
-            tvAdvTitle?.text = this.task.title
-            tvAdvDate?.text = getDate(this.task.date)
         }
 
         override fun onClick(v: View) {
@@ -102,12 +98,6 @@ class TaskListFragment : Fragment() {
         }
 
         override fun getItemCount() = tasks.size
-
-        override fun getItemViewType(position: Int): Int {
-            val task = tasks[position]
-            task.requiredManage = if (task.isSolved) 0 else 1
-            return task.requiredManage
-        }
 
     }
 }
