@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Task_Title_New">
+        <item name="android:textSize">@dimen/text_size_24</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+    </style>
+    <style name="Task_New_Button_Save">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">0dp</item>
+    </style>
+    <style name="Task_New_Button_Date">
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="cornerRadius">0dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:backgroundTint">@color/teal_200</item>
+    </style>
+</resources>

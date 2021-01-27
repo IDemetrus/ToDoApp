@@ -3,15 +3,18 @@ package com.example.todo
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.util.Log
+import android.view.*
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.*
+
+private const val TAG = "TaskFragment"
 
 class TaskFragment : Fragment() {
 
@@ -19,6 +22,9 @@ class TaskFragment : Fragment() {
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
+
+    private lateinit var viewModel: TaskListViewModel
+    private lateinit var taskListFragment: TaskListFragment
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,11 +38,14 @@ class TaskFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_task, container, false)
 
+        viewModel = ViewModelProvider(this).get(TaskListViewModel::class.java)
+        taskListFragment = TaskListFragment()
+
         titleField = view.findViewById(R.id.task_title) as EditText
         dateButton = view.findViewById(R.id.task_date) as Button
         dateButton.apply {
             text = getDate(task.date)
-            isEnabled = false
+            isEnabled = true
         }
         solvedCheckBox = view.findViewById(R.id.task_solved) as CheckBox
 
@@ -52,24 +61,16 @@ class TaskFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-
-        val titleWatcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                TODO("Not yet implemented")
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                task.title = s.toString()
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-                TODO("Not yet implemented")
-            }
-        }
-        titleField.addTextChangedListener(titleWatcher)
-
         solvedCheckBox.apply {
             setOnCheckedChangeListener { _, isChecked -> task.isSolved = isChecked }
         }
+        dateButton.setOnClickListener {
+            task.title = titleField.text.toString()
+            viewModel.addTask(task)
+            fragmentManager?.beginTransaction()
+                ?.replace(R.id.fragment_container, taskListFragment)
+                ?.commit()
+        }
     }
+
 }

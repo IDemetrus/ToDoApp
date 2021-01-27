@@ -1,11 +1,12 @@
 package com.example.todo
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.example.todo.database.TaskDatabase
 import java.util.*
 
-private const val DATABASE_NAME = "task-database"
+private const val DATABASE_NAME = "task-database-ver-1.01"
 
 class TaskRepository private constructor(context: Context) {
 
@@ -16,9 +17,12 @@ class TaskRepository private constructor(context: Context) {
     ).build()
     private val taskDao = database.taskDao()
 
-    fun getTasks(): List<Task> = taskDao.getTasks()
+    fun getTasks(): LiveData<List<Task>> = taskDao.getTasks()
 
-    fun getTask(id: UUID): Task? = taskDao.getTask(id)
+    fun getTask(id: UUID): LiveData<Task?> = taskDao.getTask(id)
+    fun addTask(task: Task) {
+        taskDao.addTask(task)
+    }
 
     companion object {
         private var INSTANCE: TaskRepository? = null

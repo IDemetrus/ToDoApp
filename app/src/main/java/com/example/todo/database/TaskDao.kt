@@ -1,6 +1,9 @@
 package com.example.todo.database
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 import com.example.todo.Task
 import java.util.*
@@ -8,8 +11,11 @@ import java.util.*
 @Dao
 interface TaskDao {
     @Query("SELECT * FROM task")
-    fun getTasks(): List<Task>
+    fun getTasks(): LiveData<List<Task>>
 
-    @Query("SELECT * FROM task WHERE id=(:id)")
-    fun getTask(id: UUID): Task?
+    @Query("SELECT * FROM task WHERE id=:id")
+    fun getTask(id: UUID): LiveData<Task?>
+
+    @Insert
+    fun addTask(task: Task)
 }

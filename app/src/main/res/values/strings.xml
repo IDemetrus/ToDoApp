@@ -4,4 +4,10 @@
     <string name="task_title_label">Title</string>
     <string name="task_details_label">Details</string>
     <string name="task_solved_label">Solved</string>
+    <string name="add_task">Add task</string>
+    <string name="description">Description</string>
+    <string name="save">save</string>
+    <string name="new_task">New task:</string>
+    <string name="date">10.10.2021</string>
+    <string name="complete_before">Complete before</string>
 </resources>

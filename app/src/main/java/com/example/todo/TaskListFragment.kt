@@ -2,11 +2,10 @@ package com.example.todo
 
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +22,8 @@ class TaskListFragment : Fragment() {
         ViewModelProvider(this).get(TaskListViewModel::class.java)
     }
     private lateinit var taskRecyclerView: RecyclerView
+    private var adapter:TaskAdapter? = TaskAdapter(emptyList())
+    private lateinit var taskAddFragment: TaskAddFragment
 
     companion object {
         fun newInstance() : TaskListFragment{
@@ -32,7 +33,7 @@ class TaskListFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d(TAG, "Total tasks: ${taskListViewModel.tasks.size}")
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -44,14 +45,23 @@ class TaskListFragment : Fragment() {
 
         taskRecyclerView = view.findViewById(R.id.task_recycler_view) as RecyclerView
         taskRecyclerView.layoutManager = LinearLayoutManager(context)
+        taskRecyclerView.adapter = adapter
 
-        updateUI()
+        taskAddFragment = TaskAddFragment()
 
         return view
     }
 
-    private fun updateUI() {
-        val tasks = taskListViewModel.tasks
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        taskListViewModel.taskListLiveData.observe(viewLifecycleOwner, { tasks ->
+            tasks?.let {
+                updateUI(tasks)
+            }
+        })
+    }
+
+    private fun updateUI(tasks: List<Task>) {
         val adapter = TaskAdapter(tasks)
         taskRecyclerView.adapter = adapter
     }
@@ -98,6 +108,24 @@ class TaskListFragment : Fragment() {
         }
 
         override fun getItemCount() = tasks.size
+
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.task_add_menu, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId){
+            R.id.task_add_menu_new -> {Toast.makeText(context, "New task add", Toast.LENGTH_SHORT).show()
+                fragmentManager?.beginTransaction()
+                    ?.replace(R.id.fragment_container,taskAddFragment, TAG)
+                    ?.addToBackStack(TAG)
+                    ?.commit()
+                true}
+            else -> return super.onOptionsItemSelected(item)
+        }
 
     }
 }
